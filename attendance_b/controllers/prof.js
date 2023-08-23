@@ -442,17 +442,18 @@ const profRequestReceive = async(req,res) => {
 
 const profRequestUpdate = async(req,res) => {
   try{
+    const id = req.body.id;
     const prof_mssg = req.body.prof_mssg;
-    const stud_id = req.body.stud_id;
-    const prof_id = req.body.prof_id;
+    // const stud_id = req.body.stud_id;
+    // const prof_id = req.body.prof_id;
     const state = req.body.state;
-    if (!stud_id || !prof_id || !state) {
+    if (!id || !state) {
       console.log("Missing parameters");
       res.status(404).json({ message: "Missing Parameters!!!" });
     }else{
       await pool.query(
-        "UPDATE request SET prof_mssg = ?, state = ? WHERE stud_id = ? AND prof_id = ? AND state = 0",
-        [prof_mssg, state, stud_id, prof_id],
+        "UPDATE request SET prof_mssg = ?, state = ? WHERE id = ?",
+        [prof_mssg, state,id],
         async (error, result) => {
           if (error) {
             console.log(error);

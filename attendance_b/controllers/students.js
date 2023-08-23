@@ -245,7 +245,7 @@ const studentgetResponse = async(req,res) =>{
   try{
     const sid = req.userId;
     await pool.query(
-      "SELECT * FROM request WHERE stud_id = ? AND state != 0",
+      "SELECT id,stud_mssg,prof_mssg,stud_id,state,course_id FROM request WHERE stud_id = ? AND state != 0",
       [sid],
       async(error,result)=>{
         if(error){
