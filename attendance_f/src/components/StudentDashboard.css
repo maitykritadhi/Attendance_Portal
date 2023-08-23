@@ -1,0 +1,32 @@
+/* Add this CSS in your component's CSS file or inline styles */
+
+.timetable-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.timetable-table th,
+.timetable-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.timetable-table th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+/* Style for occupied course slots */
+.course-slot.occupied {
+  background-color: #5cb85c;
+  color: white;
+}
+
+/* Style for empty course slots */
+.course-slot.empty {
+  background-color: #f0f0f0;
+}
+

@@ -1,0 +1,127 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams, useNavigate } from "react-router-dom";
+
+const DisplayStudents = () => {
+  const { courseId } = useParams();
+  const [students, setStudents] = useState([]);
+  const [selectedStudents, setSelectedStudents] = useState([]);
+  const sessionToken = localStorage.getItem("token");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function fetchStudents() {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/api/prof/getStudentList`,
+          {
+            headers: {
+              authorization: sessionToken,
+              cid: courseId,
+            },
+          }
+        );
+
+        setStudents(response.data);
+      } catch (error) {
+        console.error("Error fetching student list:", error);
+      }
+    }
+
+    fetchStudents();
+  }, [courseId, sessionToken]);
+
+  const handleCheckboxChange = (studentId) => {
+    if (selectedStudents.includes(studentId)) {
+      setSelectedStudents(selectedStudents.filter((id) => id !== studentId));
+    } else {
+      setSelectedStudents([...selectedStudents, studentId]);
+    }
+  };
+
+//   const handleSubmitAttendance = async () => {
+//     try {
+//       const attendList = selectedStudents.map((studentId) =>
+//         selectedStudents.includes(studentId) ? "P" : "A"
+//       );
+
+//       const response = await axios.post(
+//         "http://localhost:3000/api/prof/markAttendance",
+//         {
+//           stud_id: selectedStudents,
+//           attend_list: attendList,
+//         },
+//         {
+//           headers: {
+//             authorization: sessionToken,
+//             courseid: courseId,
+//           },
+//         }
+//       );
+
+//       console.log("Attendance marked successfully:", response.data);
+//       // You can perform any necessary actions after marking attendance, such as reloading data or displaying a success message.
+//     } catch (error) {
+//       console.error("Error marking attendance:", error);
+//     }
+//   };
+  const handleSubmitAttendance = async () => {
+    const studIdList = students.map((student) => student.id);
+    const attendList = students.map((student) =>
+      selectedStudents.includes(student.id) ? "P" : "A"
+    );
+
+    const attendanceData = {
+      stud_id: studIdList,
+      attend_list: attendList,
+    };
+  try {
+    // const attendanceData = students.map((student) => ({
+    //   stud_id: student.id,
+    //   attend_list: selectedStudents.includes(student.id) ? "P" : "A",
+    // }));
+    // console.log(attendanceData);
+    const response = await axios.post(
+      "http://localhost:3000/api/prof/markAttendance",
+      attendanceData,
+      {
+        headers: {
+          authorization: sessionToken,
+          courseid: courseId,
+        },
+      }
+    );
+
+    console.log("Attendance marked successfully:", response.data);
+    navigate("/");
+    // You can perform further actions here, such as updating the UI or reloading data
+  } catch (error) {
+    console.error("Error marking attendance:", error);
+  }
+};
+
+  
+  return (
+    <div>
+      <h2>Mark Attendance for Course ID : {courseId}</h2>
+      <ul>
+        {students.map((student) => (
+          <li key={student.id}>
+            <label>
+              <input
+                type="checkbox"
+                checked={selectedStudents.includes(student.id)}
+                onChange={() => handleCheckboxChange(student.id)}
+              />
+              Student ID: {student.id}, Student Name: {student.name}, Roll:{" "}
+              {student.roll}
+            </label>
+          </li>
+        ))}
+      </ul>
+      <button onClick={handleSubmitAttendance}>Submit Attendance</button>
+    </div>
+  );
+};
+
+export default DisplayStudents;
