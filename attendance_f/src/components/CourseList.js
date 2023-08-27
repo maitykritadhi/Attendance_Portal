@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 const CourseList = () => {
   const sessionToken = localStorage.getItem("token");
+  const typeofuser = localStorage.getItem("userType");
   const [courses, setCourses] = useState([]);
   const navigate = useNavigate();
 
@@ -31,6 +33,11 @@ const CourseList = () => {
   const handleGoBackToHomePage = () => {
     navigate("/");
   };
+
+  if (sessionToken && typeofuser === "student") {
+    // navigate("/");
+    return <Navigate to="/login/studentinfo" replace />;
+  }
 
   return (
     <>

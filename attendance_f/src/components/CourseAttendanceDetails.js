@@ -22,9 +22,14 @@ export default CourseAttendanceDetails;
 // CourseAttendanceDetails.js
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+
 import "./CourseAttendanceDetails.css"; // Import the CSS file
 
+
 const CourseAttendanceDetails = () => {
+  const typeofuser = localStorage.getItem("userType");
+  const sessionToken = localStorage.getItem("token"); // Fetch the session token
   const location = useLocation();
   const { studentData } = location.state;
   const navigate = useNavigate();
@@ -45,8 +50,13 @@ const CourseAttendanceDetails = () => {
 
   const handleGoBack = () => {
     // Navigate back to the previous page
-    navigate('/login/studentinfo');
+    navigate("/login/studentinfo");
   };
+
+  if (sessionToken && typeofuser === "professor") {
+    // navigate("/");
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div>

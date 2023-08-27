@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 const UChooseCourse = () => {
   const navigate = useNavigate();
   const sessionToken = localStorage.getItem("token");
+  const typeofuser = localStorage.getItem("userType");
   const [courses, setCourses] = useState([]);
   const selectedDayId = localStorage.getItem("selectedDayId1"); // Retrieve dayid from localStorage
   console.log(selectedDayId);
@@ -39,6 +41,11 @@ const UChooseCourse = () => {
     navigate("/");
   };
 
+  if (sessionToken && typeofuser === "student") {
+    // navigate("/");
+    return <Navigate to="/login/studentinfo" replace />;
+  }
+  
   return (
     <>
       <div>

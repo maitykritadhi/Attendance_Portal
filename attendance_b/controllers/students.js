@@ -213,26 +213,41 @@ const studentRequest = async(req,res) => {
   try{
     const sid = req.userId;
     let stud_mssg = req.body.mssg;
-    let prof_id = req.body.profid;
-    let course_id = req.body.course_id;
+    // let prof_id = req.body.profid;
+    // let course_id = req.body.course_id;
+    let id = req.body.id;
     let state = 0;
-    if(!prof_id || !course_id){
+    if (!id) {
       console.log("Missing parameters");
       res.status(404).json({ message: "Missing Parameters!!!" });
-    }else{
-      await pool.query(
-        "INSERT INTO request (stud_mssg,stud_id,prof_id,state,course_id) VALUES (?,?,?,?,?)",
-        [stud_mssg, sid, prof_id, state, course_id],
-        async (error, result) => {
-          if (error) {
-            console.log(error);
-            res.send({ message: "database error" });
-          } else {
-            console.log("Successfully send request to prof!!");
-            res.send({ message: "Successfully send request to prof!!" });
-          }
+    } else {
+      await pool.query("SELECT id,prof_id FROM courses WHERE id = ?",
+      [id],
+      async(error,result1) => {
+        if(error){
+          console.log(error);
+          res.send({ message: "database error" });
+        }else{
+          let course_id = result1[0]['id'];
+          let prof_id = result1[0]['prof_id'];
+          // console.log(result1);
+          // res.send(result1);
+          await pool.query(
+            "INSERT INTO request (stud_mssg,stud_id,prof_id,state,course_id) VALUES (?,?,?,?,?)",
+            [stud_mssg, sid, prof_id, state, course_id],
+            async (error, result) => {
+              if (error) {
+                console.log(error);
+                res.send({ message: "database error" });
+              } else {
+                console.log("Successfully send request to prof!!");
+                res.send({ message: "Successfully send request to prof!!" });
+              }
+            }
+          );
         }
-      );
+      }
+    );
     }
   }catch(error){
     // Handle any errors that occurred during the database operations
@@ -245,7 +260,7 @@ const studentgetResponse = async(req,res) =>{
   try{
     const sid = req.userId;
     await pool.query(
-      "SELECT id,stud_mssg,prof_mssg,stud_id,state,course_id FROM request WHERE stud_id = ? AND state != 0",
+      "SELECT id,stud_mssg,prof_mssg,stud_id,state,course_id FROM request WHERE stud_id = ?",
       [sid],
       async(error,result)=>{
         if(error){

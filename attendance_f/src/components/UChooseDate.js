@@ -3,10 +3,12 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 const UChooseDate = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const sessionToken = localStorage.getItem("token");
+  const typeofuser = localStorage.getItem("userType");
   const navigate = useNavigate(); // Add this line to get the navigate function
 
   const handleDateChange = (date) => {
@@ -52,6 +54,11 @@ const UChooseDate = () => {
       console.error("Error updating date:", error);
     }
   };
+
+  if (sessionToken && typeofuser === "student") {
+    // navigate("/");
+    return <Navigate to="/login/studentinfo" replace />;
+  }
 
   return (
     <div>

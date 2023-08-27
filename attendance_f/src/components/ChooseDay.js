@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Navigate } from "react-router-dom";
 
 const ChooseDay = () => {
   const navigate = useNavigate();
@@ -8,6 +9,7 @@ const ChooseDay = () => {
   const [selectedDay, setSelectedDay] = useState("");
 
   const sessionToken = localStorage.getItem("token"); // Fetch the session token
+  const typeofuser = localStorage.getItem("userType");
 
   useEffect(() => {
     // Check if the user is logged in using the session token
@@ -48,6 +50,11 @@ const ChooseDay = () => {
   const handleContinue = () => {
     navigate("/chooseday/choosecourse", { state: { selectedDay } });
   };
+
+  if (sessionToken && typeofuser === "student") {
+    // navigate("/");
+    return <Navigate to="/login/studentinfo" replace />;
+  }
 
   return (
     <div>

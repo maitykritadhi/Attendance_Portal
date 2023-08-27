@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 const UViewStudents = () => {
   const sessionToken = localStorage.getItem("token"); // Replace with your token retrieval logic
+  const typeofuser = localStorage.getItem("userType");
   const { courseId } = useParams();
   const navigate = useNavigate();
 
@@ -82,7 +84,7 @@ const UViewStudents = () => {
       // Remove formattedDate and selectedDayId1 from local storage
       localStorage.removeItem("formattedDate");
       localStorage.removeItem("selectedDayId1");
-      localStorage.removeItem("userType");
+      // localStorage.removeItem("userType");
 
       // Navigate to home page on successful updation
       navigate("/");
@@ -90,6 +92,11 @@ const UViewStudents = () => {
       console.error("Error updating attendance:", error);
     }
   };
+
+  if (sessionToken && typeofuser === "student") {
+    // navigate("/");
+    return <Navigate to="/login/studentinfo" replace />;
+  }
 
   return (
     <div>

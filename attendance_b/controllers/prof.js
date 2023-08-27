@@ -421,7 +421,7 @@ const profRequestReceive = async(req,res) => {
   try{
     const sid = req.userId;
     await pool.query(
-      "SELECT r.id,r.stud_mssg,r.stud_id,s.name,s.roll,s.mail,r.prof_id,r.state,r.course_id FROM request r JOIN students s ON r.stud_id = s.id WHERE r.prof_id = ? AND r.state = 0",
+      "SELECT r.id,r.stud_mssg,r.stud_id,s.name,s.roll,s.mail,r.prof_id,r.state,(SELECT cid FROM attenendance.courses WHERE id = r.course_id) as cname FROM attenendance.request r JOIN attenendance.students s ON r.stud_id = s.id WHERE r.prof_id = ? AND r.state = 0;",
       [sid],
       async (error, result) => {
         if (error) {

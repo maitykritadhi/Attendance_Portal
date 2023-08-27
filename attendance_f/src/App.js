@@ -21,6 +21,9 @@ import UViewStudents from './components/UViewStudents';
 
 import StudentDashboard from './components/StudentDashboard';
 import CourseAttendanceDetails from './components/CourseAttendanceDetails';
+import StudentEnquiry from './components/StudentEnquiry';
+import ProfReceiveEnquiry from './components/ProfReceiveEnquiry';
+import StudentEnquiryResult from './components/StudentEnquiryResult';
 
 function App() {
   return (
@@ -52,7 +55,19 @@ function App() {
             <Route path="/login/studentinfo" element={<StudentDashboard />} />
             <Route
               path="/login/studentinfo/:courseId"
-              element={<CourseAttendanceDetails/>}
+              element={<CourseAttendanceDetails />}
+            />
+            <Route
+              path="/login/studentinfo/studentenquiry"
+              element={<StudentEnquiry />}
+            />
+            <Route
+              path="/profreceiveenquiry"
+              element={<ProfReceiveEnquiry />}
+            />
+            <Route
+              path="/login/studentinfo/studentenquiryresult"
+              element={<StudentEnquiryResult />}
             />
           </Routes>
         </Router>

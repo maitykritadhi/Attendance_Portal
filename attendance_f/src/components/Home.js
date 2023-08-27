@@ -39,6 +39,10 @@ const Home = () => {
     }
   };
 
+  const handleCheckEnquiryOfStudents = ()=>{
+    navigate("/profreceiveenquiry");
+  };
+
   if (!sessionToken) {
     // navigate("/login");
     return <Navigate to="/login" replace />;
@@ -97,6 +101,11 @@ const Home = () => {
         >
           Submit
         </button>
+        <div>
+          <button onClick={handleCheckEnquiryOfStudents}>
+            Check Enquiry of Students
+          </button>
+        </div>
       </>
     );
 };
