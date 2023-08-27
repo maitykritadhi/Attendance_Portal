@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 
+import "./ChooseDay.css"; // Import the CSS file
+
 const ChooseDay = () => {
   const navigate = useNavigate();
   const [availableDays, setAvailableDays] = useState([]);
@@ -57,9 +59,13 @@ const ChooseDay = () => {
   }
 
   return (
-    <div>
-      <h2>Choose Attendance Day</h2>
-      <select value={selectedDay} onChange={handleDayChange}>
+    <div className="choose-day-container">
+      <h2 className="choose-day-title">Choose Attendance Day</h2>
+      <select
+        className="choose-day-dropdown"
+        value={selectedDay}
+        onChange={handleDayChange}
+      >
         <option value="">Select a Day</option>
         {availableDays.map((day) => (
           <option key={day.dayid} value={day.dayid}>
@@ -67,7 +73,9 @@ const ChooseDay = () => {
           </option>
         ))}
       </select>
-      <button onClick={handleContinue}>Continue</button>
+      <button className="choose-day-button" onClick={handleContinue}>
+        Continue
+      </button>
     </div>
   );
 };

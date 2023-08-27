@@ -47,21 +47,26 @@ const ChooseCourse = () => {
 
   return (
     <>
-      <div>
+      <div className="course-list-container">
         <h2>Choose a Course</h2>
         <ul>
           {courses.map((course) => (
-            <li key={course.id}>
+            <li key={course.id} className="course-list-item">
               Course ID: {course.id}, Course Name: {course.cname}
               {"   =>  "}
-              <Link to={`/chooseday/choosecourse/${course.id}`}>
+              <Link
+                to={`/chooseday/choosecourse/${course.id}`}
+                className="course-link"
+              >
                 View Students
               </Link>
             </li>
           ))}
         </ul>
       </div>
-      <button onClick={handleGoBackToHomePage}>Go Back To Home Page</button>
+      <button className="back-button" onClick={handleGoBackToHomePage}>
+        Go Back To Home Page
+      </button>
     </>
   );
 };

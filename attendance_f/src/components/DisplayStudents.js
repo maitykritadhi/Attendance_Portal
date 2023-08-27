@@ -3,6 +3,8 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 
+import "./DisplayStudents.css";  // Import the CSS file
+
 const DisplayStudents = () => {
   const { courseId } = useParams();
   const [students, setStudents] = useState([]);
@@ -119,13 +121,16 @@ const DisplayStudents = () => {
                 checked={selectedStudents.includes(student.id)}
                 onChange={() => handleCheckboxChange(student.id)}
               />
-              Student ID: {student.id}, Student Name: {student.name}, Roll:{" "}
-              {student.roll}
+              Student ID: <span className="bold">{student.id}</span>, Student
+              Name: <span className="bold">{student.name}</span>, Student Roll:{" "}
+              <span className="bold">{student.roll}</span>
             </label>
           </li>
         ))}
       </ul>
-      <button onClick={handleSubmitAttendance}>Submit Attendance</button>
+      <button className="submit-button"  onClick={handleSubmitAttendance}>
+        Submit Attendance
+      </button>
     </div>
   );
 };

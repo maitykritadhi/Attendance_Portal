@@ -3,6 +3,8 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 
+import "./CourseList.css"; // Import the CSS file
+
 const CourseList = () => {
   const sessionToken = localStorage.getItem("token");
   const typeofuser = localStorage.getItem("userType");
@@ -40,21 +42,23 @@ const CourseList = () => {
   }
 
   return (
-    <>
-      <div>
-        <h2>Course List</h2>
-        <ul>
-          {courses.map((course) => (
-            <li key={course.id}>
-              Course ID: {course.id}, Course Name: {course.cname}
-              {"   =>  "}
-              <Link to={`/courses/${course.id}`}> View Students</Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <button onClick={handleGoBackToHomePage}>Go Back To Home Page</button>
-    </>
+    <div className="course-list-container">
+      <h2>Course List</h2>
+      <ul className="course-list">
+        {courses.map((course) => (
+          <li key={course.id} className="course-list-item">
+            Course ID: {course.id}, Course Name: {course.cname}
+            {"   =>  "}
+            <Link to={`/courses/${course.id}`} className="course-link">
+              View Students
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <button className="back-button" onClick={handleGoBackToHomePage}>
+        Go Back To Home Page
+      </button>
+    </div>
   );
 };
 

@@ -3,6 +3,8 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 
+import "./UViewStudents.css"
+
 const UViewStudents = () => {
   const sessionToken = localStorage.getItem("token"); // Replace with your token retrieval logic
   const typeofuser = localStorage.getItem("userType");
@@ -110,15 +112,20 @@ const UViewStudents = () => {
                 checked={student.attendance === "P"}
                 onChange={() => handleCheckboxChange(student.id)}
               />
-              Student ID: {student.id}, Name: {student.name}, Roll:{" "}
-              {student.roll}
+              Student ID: <span className="bold">{student.id}</span>, Student
+              Name: <span className="bold">{student.name}</span>, Student Roll:{" "}
+              <span className="bold">{student.roll}</span>
             </label>
           </li>
         ))}
       </ul>
-      <button onClick={handleUpdateAttendance}>Update Attendance</button>
+      <button className="update-button" onClick={handleUpdateAttendance}>
+        Update Attendance
+      </button>
       {showSubmitButton && (
-        <button onClick={handleSubmit}>Submit Updated Attendance</button>
+        <button className="submit-button"  onClick={handleSubmit}>
+          Submit Updated Attendance
+        </button>
       )}
     </div>
   );

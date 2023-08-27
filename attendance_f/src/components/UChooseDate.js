@@ -5,6 +5,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 
+import "./UChooseDate.css"
+
 const UChooseDate = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const sessionToken = localStorage.getItem("token");
@@ -60,11 +62,25 @@ const UChooseDate = () => {
     return <Navigate to="/login/studentinfo" replace />;
   }
 
+  // return (
+  //   <div>
+  //     <h2>Choose Date</h2>
+  //     <DatePicker selected={selectedDate} onChange={handleDateChange} />
+  //     <button onClick={handleUpdateDate}>Submit Date</button>
+  //   </div>
+  // );
   return (
-    <div>
-      <h2>Choose Date</h2>
-      <DatePicker selected={selectedDate} onChange={handleDateChange} />
-      <button onClick={handleUpdateDate}>Submit Date</button>
+    <div className="choose-date-container">
+      <h2 className="choose-date-title">Choose Date</h2>
+      <DatePicker
+        className="react-datepicker-wrapper"
+        selected={selectedDate}
+        onChange={handleDateChange}
+        calendarClassName="react-datepicker__calendar"
+      />
+      <button className="submit-button" onClick={handleUpdateDate}>
+        Submit Date
+      </button>
     </div>
   );
 };

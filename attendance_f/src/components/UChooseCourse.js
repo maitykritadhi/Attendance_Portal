@@ -3,6 +3,9 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 
+
+import "./UChooseCourse.css"; // Import the CSS file
+
 const UChooseCourse = () => {
   const navigate = useNavigate();
   const sessionToken = localStorage.getItem("token");
@@ -48,7 +51,7 @@ const UChooseCourse = () => {
   
   return (
     <>
-      <div>
+      <div className="course-list-container">
         <h2>Choose a Course for Updation of Attendance </h2>
         <ul>
           {courses.map((course) => (
@@ -62,7 +65,9 @@ const UChooseCourse = () => {
           ))}
         </ul>
       </div>
-      <button onClick={handleGoBackToHomePage}>Go Back To Home Page</button>
+      <button className="back-button" onClick={handleGoBackToHomePage}>
+        Go Back To Home Page
+      </button>
     </>
   );
 };
