@@ -211,8 +211,47 @@ const profAssignStudents = async (req, res) => {
 // Mark Attendance
 const profChooseDate = async (req, res) => {
   try {
+    // Create a new Date object to get the current date and time
+    const currentDate = new Date();
+
+    // Extract the year, month, and day
+    const year = currentDate.getFullYear();
+    // JavaScript months are zero-based, so we add 1 to get the actual month
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDate.getDate()).padStart(2, "0");
+
+    // Create the formatted date string
+    const formattedDate = `${year}-${month}-${day}`;
+    // const formattedDate = '2023-09-05';
+
+    // console.log(formattedDate);
+
+    const dateObject = new Date(formattedDate);
+    console.log(dateObject);
+
+    // Get the day of the week as a number (0 = Sunday, 1 = Monday, etc.)
+    const dayOfWeek = dateObject.getDay();
+
+    // Define an array of weekday names
+    const weekdays = [
+      "sunday",
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+    ];
+
+    // Use the dayOfWeek number to get the corresponding weekday name
+    const dayName = weekdays[dayOfWeek];
+
+    console.log(dayName);
+
     const flagofuser = Number(req.flag);
-    await pool.query("SELECT * FROM days_mapped", async (error, result) => {
+    await pool.query("SELECT * FROM days_mapped WHERE dayname = ?",
+    [dayName],
+     async (error, result) => {
       if (error) {
         console.log(error);
         res.send({ message: "database error" });

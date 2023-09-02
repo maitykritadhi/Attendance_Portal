@@ -53,6 +53,7 @@ const StudentDashboard = () => {
     // Redirect to the login page
     localStorage.removeItem("token");
     localStorage.removeItem("userType");
+    localStorage.clear();
     navigate("/login"); // Adjust the route as needed
   };
   

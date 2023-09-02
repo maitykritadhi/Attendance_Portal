@@ -80,24 +80,26 @@ const StudentList = () => {
   }
 
   return (
-    <div>
+    <div className="student-list-container">
       <h2>Students Not Enrolled in Course ID : {courseId}</h2>
-      <ul>
-        {students.map((student) => (
-          <li key={student.id}>
-            <label>
-              <input
-                type="checkbox"
-                checked={selectedStudents.includes(student.id)}
-                onChange={() => handleCheckboxChange(student.id)}
-              />
-              Student ID: <span className="bold">{student.id}</span>, {" "} 
-              Student Name: <span className="bold">{student.name}</span>,
-              Student Roll:{" "}<span className="bold">{student.roll}</span>
-            </label>
-          </li>
-        ))}
-      </ul>
+      <div className="student-list">
+        <ul>
+          {students.map((student) => (
+            <li key={student.id}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={selectedStudents.includes(student.id)}
+                  onChange={() => handleCheckboxChange(student.id)}
+                />
+                Student ID: <span className="bold">{student.id}</span>, Student
+                Name: <span className="bold">{student.name}</span>, Student
+                Roll: <span className="bold">{student.roll}</span>
+              </label>
+            </li>
+          ))}
+        </ul>
+      </div>
       <div className="button-container">
         <button className="enroll-button" onClick={handleSubmit}>
           Enroll Selected Students

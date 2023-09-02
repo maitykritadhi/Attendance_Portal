@@ -22,11 +22,18 @@ const StudentEnquiry = () => {
   }
 
   const handleSendMessage = async () => {
+    // Check if either message or selectedCourse is empty
+    if (!message || !selectedCourse) {
+      // Show an alert error message
+      alert("Please enter both message and select a course.");
+      return; // Exit the function early
+    }
+    
     try {
-    //   const requestBody = {
-    //     mssg: message,
-    //     id: selectedCourse,
-    //   };
+      //   const requestBody = {
+      //     mssg: message,
+      //     id: selectedCourse,
+      //   };
 
       const response = await axios.post(
         "http://localhost:3000/api/students/studentRequest",
@@ -41,6 +48,10 @@ const StudentEnquiry = () => {
           //   requestBody,
         }
       );
+
+      // Clear the message input once the message is sent
+      setMessage("");
+
       console.log(response.data.message); // Display success message
 
       // Optionally, you can perform some actions after sending the request.

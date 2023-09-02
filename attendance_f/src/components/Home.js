@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 
+import axios from "axios";
+
 import "./Home.css"; // Import the CSS file
 
 const Home = () => {
@@ -16,6 +18,7 @@ const Home = () => {
     // Perform logout actions (e.g., clear token, user data, etc.)
     localStorage.removeItem("token");
     localStorage.removeItem("userType");
+    localStorage.clear();
     navigate("/login");
   };
 
@@ -35,7 +38,29 @@ const Home = () => {
     if (userType === "1") {
       navigate("/courses"); // Navigate to the assigned courses page
     } else if (userType === "2") {
-      navigate("/chooseday"); // Navigate to the mark attendance page
+
+      const headers = {
+        // Add your headers here
+        authorization: sessionToken, // Example custom header
+      };
+      
+      // Call the API using Axios
+      axios
+        .get("http://localhost:3000/api/prof/chooseDate", { headers })
+        .then((response) => {
+          console.log(response);
+          const selectedDay = response.data[0]['dayid']; // Assuming the API returns the selected day
+          console.log(selectedDay);
+
+          // Navigate to the '/chooseday/choosecourse' route with the selectedDay parameter
+          navigate("/chooseday/choosecourse", { state: { selectedDay } });
+        })
+        .catch((error) => {
+          console.error("Error while fetching data:", error);
+        });
+
+      // navigate("/chooseday"); // Navigate to the mark attendance page
+
     } else if (userType === "3") {
       navigate("/uchoosedate");
     }
@@ -54,69 +79,6 @@ const Home = () => {
   if (sessionToken && typeofuser === "student") {
     return <Navigate to="/login/studentinfo" replace />;
   }
-  /*
-    return (
-      <div className="body">
-        <div className="header">
-          <div className="header">
-            <h1>Welcome to the Home Page</h1>
-          </div>
-          <div className="mb-3 selection-box">
-            <label>
-              <h2>Select Option</h2>
-            </label>
-            <div>
-              <label className="radio-inline">
-                <input
-                  type="radio"
-                  value="1"
-                  checked={userType === "1"}
-                  onChange={handleUserTypeChange1}
-                />
-                Assign Student Courses
-              </label>
-              <label className="radio-inline">
-                <input
-                  type="radio"
-                  value="2"
-                  checked={userType === "2"}
-                  onChange={handleUserTypeChange2}
-                />
-                Mark Attendance
-              </label>
-              <label className="radio-inline">
-                <input
-                  type="radio"
-                  value="3"
-                  checked={userType === "3"}
-                  onChange={handleUserTypeChange3}
-                />
-                Update Attendance
-              </label>
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            className="btn btn-primary"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
-        </div>
-
-        <div>
-          <button className="btn-orange onClick={handleCheckEnquiryOfStudents}>
-            Check Enquiry of Students
-          </button>
-          <button className="btn-black" onClick={handleLogout}>
-            Logout
-          </button>
-        </div>
-      </div>
-    );
-    */
-
     
   return (
     <>
