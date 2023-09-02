@@ -13,6 +13,8 @@ module.exports.auth = async (req, res, next) => {
           return res.status(401).json({ message: "Unauthorized User!!" });
         } else {
           req.userId = result[0].user_id;
+          req.flag = result[0].flag[0];
+          // console.log(typeof req.flag);
           return next();
         }
       }

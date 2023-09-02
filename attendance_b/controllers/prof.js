@@ -104,6 +104,8 @@ const profLogin = async (req, res) => {
 const profGetCourse = async (req, res) => {
   try {
     const userId = req.userId;
+    const flagofuser = Number(req.flag);
+    // console.log(req.flag);
     await pool.query(
       "SELECT id,cid,cname FROM courses WHERE prof_id = ?",
       [userId],
@@ -113,6 +115,10 @@ const profGetCourse = async (req, res) => {
         } else if (!result[0]) {
           console.log("Bad request");
           res.status(400).json({ error: "Bad Request" });
+        } else if (flagofuser === 0) {
+          // console.log(flagofuser);
+          console.log("Bad Request due to wrong user");
+          res.status(400).json({ error: "Bad Request due to wrong user" });
         } else {
           console.log(result);
           res.send(result);
@@ -129,12 +135,17 @@ const profGetCourse = async (req, res) => {
 const profGetStudents = async (req, res) => {
   try {
     const courseId = req.headers.course_id;
+    const flagofuser = Number(req.flag);
     await pool.query(
       "SELECT students.id, students.name, students.roll FROM attenendance.students WHERE students.id NOT IN (SELECT student_course_mapped.stud_id FROM attenendance.student_course_mapped WHERE student_course_mapped.course_id = ?)",
       [courseId],
       async (error, result) => {
         if (error) {
           res.send({ message: "database error" });
+        } else if (flagofuser === 0) {
+          // console.log(flagofuser);
+          console.log("Bad Request due to wrong user");
+          res.status(400).json({ error: "Bad Request due to wrong user" });
         } else {
           console.log(result);
           res.send(result);
@@ -152,10 +163,15 @@ const profAssignStudents = async (req, res) => {
   // res.send({message: "Checking Auth function"});
   try {
     const { cid, sid } = req.body;
+    const flagofuser = Number(req.flag);
     // console.log(sid.length);
     if (!cid || !sid) {
       console.log("Missing parameters");
       res.status(404).json({ message: "Please submit all valid parameters!" });
+    } else if (flagofuser === 0) {
+      // console.log(flagofuser);
+      console.log("Bad Request due to wrong user");
+      res.status(400).json({ error: "Bad Request due to wrong user" });
     } else if (!sid.length) {
       console.log("No Students to assign");
       res.status(404).json({ message: "No Students to assign!" });
@@ -195,10 +211,15 @@ const profAssignStudents = async (req, res) => {
 // Mark Attendance
 const profChooseDate = async (req, res) => {
   try {
+    const flagofuser = Number(req.flag);
     await pool.query("SELECT * FROM days_mapped", async (error, result) => {
       if (error) {
         console.log(error);
         res.send({ message: "database error" });
+      } else if (flagofuser === 0) {
+        // console.log(flagofuser);
+        console.log("Bad Request due to wrong user");
+        res.status(400).json({ error: "Bad Request due to wrong user" });
       } else {
         console.log(result);
         res.send(result);
@@ -215,6 +236,7 @@ const profChooseCourse = async (req, res) => {
   try {
     const dayid = req.headers.dayid;
     const userId = req.userId;
+    const flagofuser = Number(req.flag);
     await pool.query(
       "SELECT id,cid,cname FROM attenendance.courses WHERE prof_id = ? AND id IN (SELECT cid FROM attenendance.timetable WHERE dayid = ?)",
       [userId, dayid],
@@ -222,6 +244,10 @@ const profChooseCourse = async (req, res) => {
         if (error) {
           console.log(error);
           res.send({ message: "database error" });
+        } else if (flagofuser === 0) {
+          // console.log(flagofuser);
+          console.log("Bad Request due to wrong user");
+          res.status(400).json({ error: "Bad Request due to wrong user" });
         } else {
           console.log(result);
           res.send(result);
@@ -238,6 +264,7 @@ const profChooseCourse = async (req, res) => {
 const profGetStudentList = async (req, res) => {
   try {
     const cid = req.headers.cid;
+    const flagofuser = Number(req.flag);
     await pool.query(
       "SELECT id,name,roll,mail FROM students WHERE id IN (SELECT stud_id FROM student_course_mapped WHERE course_id = ?)",
       [cid],
@@ -245,6 +272,10 @@ const profGetStudentList = async (req, res) => {
         if (error) {
           console.log(error);
           res.send({ message: "database error" });
+        } else if (flagofuser === 0) {
+          // console.log(flagofuser);
+          console.log("Bad Request due to wrong user");
+          res.status(400).json({ error: "Bad Request due to wrong user" });
         } else {
           console.log(result);
           res.send(result);
@@ -263,9 +294,14 @@ const profMarksAttendance = async (req, res) => {
     const sid_list = req.body.stud_id;
     const attend_student_list = req.body.attend_list;
     const course_id = req.headers.courseid;
+    const flagofuser = Number(req.flag);
     if (!sid_list) {
       console.log("No students list provided!!");
       res.status(404).json({ message: "No students list provided!!" });
+    } else if (flagofuser === 0) {
+      // console.log(flagofuser);
+      console.log("Bad Request due to wrong user");
+      res.status(400).json({ error: "Bad Request due to wrong user" });
     } else if (sid_list.length == 0) {
       console.log("List size zero!!");
       res.status(404).json({ message: "List Size zero!!" });
@@ -310,6 +346,7 @@ const profMarksAttendance = async (req, res) => {
 const updateprofchooseDate = async (req, res) => {
   const dateStr = req.headers.sdate;
   const date = new Date(dateStr);
+  const flagofuser = Number(req.flag);
 
   const daysOfWeek = [
     "sunday",
@@ -331,6 +368,10 @@ const updateprofchooseDate = async (req, res) => {
         if (error) {
           console.log(error);
           res.send({ message: "database error" });
+        } else if (flagofuser === 0) {
+          // console.log(flagofuser);
+          console.log("Bad Request due to wrong user");
+          res.status(400).json({ error: "Bad Request due to wrong user" });
         } else {
           console.log(result[0]);
           res.send(result[0]);
@@ -349,14 +390,20 @@ const updateProfFetchStudentList = async(req,res) => {
   try{
     const cid = req.headers.cid;
     const date = req.headers.sdate;
+    const flagofuser = Number(req.flag);
+
     await pool.query(
       "SELECT s.id,s.name,s.roll, ma.attendance FROM students s JOIN mark_attendance ma ON s.id = ma.stud_id WHERE ma.course_id = ? AND ma.date = ?",
       [cid,date],
       async(error,result) => {
-        if(error){
+        if (error) {
           console.log(error);
           res.send({ message: "database error" });
-        }else{
+        } else if (flagofuser === 0) {
+          // console.log(flagofuser);
+          console.log("Bad Request due to wrong user");
+          res.status(400).json({ error: "Bad Request due to wrong user" });
+        } else {
           console.log(result);
           res.send(result);
         }
@@ -374,13 +421,19 @@ const profUpdatesAttendance = async(req,res) => {
     const data = req.body;
     const date = req.headers.ma_date;
     const cid = req.headers.ma_courseid;
-    if(!data){
+    const flagofuser = Number(req.flag);
+
+    if (!data) {
       console.log("No students list provided!!");
       res.status(404).json({ message: "No students list provided!!" });
-    }else if(data.length == 0){
+    } else if (flagofuser === 0) {
+      // console.log(flagofuser);
+      console.log("Bad Request due to wrong user");
+      res.status(400).json({ error: "Bad Request due to wrong user" });
+    } else if (data.length == 0) {
       console.log("List size zero!!");
       res.status(404).json({ message: "List Size zero!!" });
-    }else{
+    } else {
       let str = "";
       for (let i = 0; i < data.length; i++) {
         str += `UPDATE mark_attendance SET attendance ='${data[i].attendance}' WHERE stud_id =${data[i].stud_id} AND date = '${date}' AND course_id = '${cid}';`;
@@ -397,18 +450,15 @@ const profUpdatesAttendance = async(req,res) => {
       //   str += "; "
       // }
       // console.log(str);
-      await pool.query(
-        str,
-        async(error,result) => {
-          if (error) {
-            console.log(error);
-            res.send({ message: "database error" });
-          } else {
-            console.log("Successfully updated attendance!!");
-            res.send({ message: "Successfully updated attendance!!" });
-          }
+      await pool.query(str, async (error, result) => {
+        if (error) {
+          console.log(error);
+          res.send({ message: "database error" });
+        } else {
+          console.log("Successfully updated attendance!!");
+          res.send({ message: "Successfully updated attendance!!" });
         }
-      );
+      });
     }
   }catch(error){
     // Handle any errors that occurred during the database operations
@@ -420,6 +470,8 @@ const profUpdatesAttendance = async(req,res) => {
 const profRequestReceive = async(req,res) => {
   try{
     const sid = req.userId;
+    const flagofuser = Number(req.flag);
+
     await pool.query(
       "SELECT r.id,r.stud_mssg,r.stud_id,s.name,s.roll,s.mail,r.prof_id,r.state,(SELECT cid FROM attenendance.courses WHERE id = r.course_id) as cname FROM attenendance.request r JOIN attenendance.students s ON r.stud_id = s.id WHERE r.prof_id = ? AND r.state = 0;",
       [sid],
@@ -427,6 +479,10 @@ const profRequestReceive = async(req,res) => {
         if (error) {
           console.log(error);
           res.send({ message: "database error" });
+        } else if (flagofuser === 0) {
+          // console.log(flagofuser);
+          console.log("Bad Request due to wrong user");
+          res.status(400).json({ error: "Bad Request due to wrong user" });
         } else {
           console.log(result);
           res.send(result);
@@ -444,6 +500,7 @@ const profRequestUpdate = async(req,res) => {
   try{
     const id = req.body.id;
     const prof_mssg = req.body.prof_mssg;
+    const flagofuser = Number(req.flag);
     // const stud_id = req.body.stud_id;
     // const prof_id = req.body.prof_id;
     const state = req.body.state;
@@ -458,6 +515,10 @@ const profRequestUpdate = async(req,res) => {
           if (error) {
             console.log(error);
             res.send({ message: "database error" });
+          } else if (flagofuser === 0) {
+            // console.log(flagofuser);
+            console.log("Bad Request due to wrong user");
+            res.status(400).json({ error: "Bad Request due to wrong user" });
           } else {
             console.log("Successfully updated student request by prof!!");
             res.send({
