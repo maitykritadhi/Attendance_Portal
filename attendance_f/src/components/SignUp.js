@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+import "./SignUp.css"; // Import the CSS file
+
 const SignUp = () => {
   const [userType, setUserType] = useState("");
   const [name, setName] = useState("");
@@ -56,7 +58,7 @@ const SignUp = () => {
   };
 
   return (
-    <div>
+    <div className="signup-form">
       <h1>Signup Form</h1>
       <form onSubmit={handleSubmit}>
         <label>
@@ -79,7 +81,7 @@ const SignUp = () => {
           />
         </label>
         <br />
-        <div>
+        <div className="user-type-container">
           <label>
             User Type:
             <input

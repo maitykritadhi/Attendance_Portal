@@ -3,6 +3,8 @@ import axios from "axios";
 import { Navigate, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
+import "./StudentEnquiry.css"; // Import the CSS file
+
 const StudentEnquiry = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -57,7 +59,7 @@ const StudentEnquiry = () => {
   };
 
   return (
-    <div>
+    <div className="student-enquiry">
       <h1>Student Enquiry</h1>
       <div>
         <h2>Welcome, {studentData.name}!</h2>
@@ -84,15 +86,17 @@ const StudentEnquiry = () => {
         />
       </div>
       <div>
-        <button onClick={handleSendMessage}>Send Enquiry To Professor</button>
+        <button className="send-btn" onClick={handleSendMessage}>
+          Send Enquiry To Professor
+        </button>
       </div>
       <div>
-        <button onClick={handleCheckEnquiryResult}>
+        <button className="check-btn" onClick={handleCheckEnquiryResult}>
           Check Enquiry result
         </button>
       </div>
       <div>
-        <button onClick={handleBackToStudentInfo}>
+        <button className="back-btn" onClick={handleBackToStudentInfo}>
           Go Back To Student Dashboard
         </button>
       </div>

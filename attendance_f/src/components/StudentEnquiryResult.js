@@ -3,6 +3,8 @@ import axios from "axios";
 import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
+import "./StudentEnquiryResult.css"; // Import the CSS file
+
 const StudentEnquiryResult = () => {
   const sessionToken = localStorage.getItem("token");
   const typeofuser = localStorage.getItem("userType");
@@ -44,7 +46,7 @@ const StudentEnquiryResult = () => {
 
   return (
     <>
-      <div>
+      <div className="student-enquiry-result">
         <h1>Student Enquiry Results</h1>
         <table>
           <thead>
@@ -58,7 +60,16 @@ const StudentEnquiryResult = () => {
           </thead>
           <tbody>
             {enquiryResults.map((result) => (
-              <tr key={result.id}>
+              <tr
+                key={result.id}
+                className={`status-${
+                  result.state === 1
+                    ? "accepted"
+                    : result.state === 0
+                    ? "pending"
+                    : "rejected"
+                }`}
+              >
                 <td>{result.id}</td>
                 <td>{result.stud_mssg}</td>
                 <td>{result.prof_mssg}</td>

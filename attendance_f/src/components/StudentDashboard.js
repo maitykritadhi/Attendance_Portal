@@ -133,7 +133,9 @@ const StudentDashboard = () => {
         >
           Student Enquiry
         </button>
-        <button onClick={handleLogout}>Logout</button>
+        <button id="logout-btn"  onClick={handleLogout}>
+          Logout
+        </button>
       </div>
     </div>
   );

@@ -196,6 +196,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 
+import './ProfReceiveEnquiry.css'; // Import the CSS file
+
 const ProfReceiveEnquiry = () => {
   const sessionToken = localStorage.getItem("token");
   const typeofuser = localStorage.getItem("userType");
@@ -278,68 +280,76 @@ const ProfReceiveEnquiry = () => {
 
   return (
     <>
-    <div>
-      <h1>Student Enquiries</h1>
-      <table>
-        <tr>
-          <th>Request ID</th>
-          <th>Student Name</th>
-          <th>Student Roll</th>
-          <th>Student Mail</th>
-          <th>Student ID</th>
-          <th>Student Message</th>
-          <th>Status</th>
-          <th>Course Name</th>
-        </tr>
-        <tbody>
-          {enquiries.map((enquiry) => (
-            <tr key={enquiry.id}>
-              <td>{enquiry.id}</td>
-              <td>{enquiry.name}</td>
-              <td>{enquiry.roll}</td>
-              <td>{enquiry.mail}</td>
-              <td>{enquiry.stud_id}</td>
-              <td>{enquiry.stud_mssg}</td>
-              <td>
-                {enquiry.state === 0
-                  ? "Pending"
-                  : enquiry.state === 1
-                  ? "Accepted"
-                  : "Rejected"}
-              </td>
-              <td>{enquiry.cname}</td>
-              <td>
-                {enquiry.state === 0 ? (
-                  <div>
-                    <textarea
-                      value={profMssgInputs[enquiry.id] || ""}
-                      onChange={(e) =>
-                        setProfMssgInputs((prevInputs) => ({
-                          ...prevInputs,
-                          [enquiry.id]: e.target.value,
-                        }))
-                      }
-                      placeholder="Enter your response..."
-                    />
-                    <button onClick={() => handleUpdateRequest(enquiry.id, 1)}>
-                      Accept
-                    </button>
-                    <button onClick={() => handleUpdateRequest(enquiry.id, 2)}>
-                      Reject
-                    </button>
-                  </div>
-                ) : (
-                  "Handled"
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-    <div>
-        <button onClick={handleBackToHome}>Go Back To Home Page</button>
-    </div>
+      <div>
+        <h1>Student Enquiries</h1>
+        <table className="custom-table">
+          <tr>
+            <th>Request ID</th>
+            <th>Student Name</th>
+            <th>Student Roll</th>
+            <th>Student Mail</th>
+            <th>Student ID</th>
+            <th>Student Message</th>
+            <th>Status</th>
+            <th>Course Name</th>
+          </tr>
+          <tbody>
+            {enquiries.map((enquiry) => (
+              <tr key={enquiry.id}>
+                <td>{enquiry.id}</td>
+                <td>{enquiry.name}</td>
+                <td>{enquiry.roll}</td>
+                <td>{enquiry.mail}</td>
+                <td>{enquiry.stud_id}</td>
+                <td>{enquiry.stud_mssg}</td>
+                <td>
+                  {enquiry.state === 0
+                    ? "Pending"
+                    : enquiry.state === 1
+                    ? "Accepted"
+                    : "Rejected"}
+                </td>
+                <td>{enquiry.cname}</td>
+                <td>
+                  {enquiry.state === 0 ? (
+                    <div>
+                      <textarea
+                        value={profMssgInputs[enquiry.id] || ""}
+                        onChange={(e) =>
+                          setProfMssgInputs((prevInputs) => ({
+                            ...prevInputs,
+                            [enquiry.id]: e.target.value,
+                          }))
+                        }
+                        placeholder="Enter your response..."
+                      />
+                      <button
+                        onClick={() => handleUpdateRequest(enquiry.id, 1)}
+                        className="accept-button"
+                      >
+                        Accept
+                      </button>
+                      <button
+                        onClick={() => handleUpdateRequest(enquiry.id, 2)}
+                        className="reject-button"
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  ) : (
+                    "Handled"
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <button className="go-back-button" onClick={handleBackToHome}>
+          Go Back To Home Page
+        </button>
+      </div>
     </>
   );
 };
