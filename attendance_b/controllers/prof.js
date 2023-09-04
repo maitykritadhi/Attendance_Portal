@@ -223,8 +223,8 @@ const profChooseDate = async (req, res) => {
     const day = String(currentDate.getDate()).padStart(2, "0");
 
     // Create the formatted date string
-    // const formattedDate = `${year}-${month}-${day}`;
-    const formattedDate = '2023-09-05';
+    const formattedDate = `${year}-${month}-${day}`;
+    // const formattedDate = '2023-09-05';
 
     // console.log(formattedDate);
 
