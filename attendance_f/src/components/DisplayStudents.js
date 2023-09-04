@@ -104,6 +104,10 @@ const DisplayStudents = () => {
   }
 };
 
+ const handleGoBack = () => {
+   navigate(-1); // Go back to the previous page
+ };
+
   if (sessionToken && typeofuser === "student") {
     // navigate("/");
     return <Navigate to="/login/studentinfo" replace />;
@@ -128,8 +132,11 @@ const DisplayStudents = () => {
           </li>
         ))}
       </ul>
-      <button className="submit-button"  onClick={handleSubmitAttendance}>
+      <button className="submit-button" onClick={handleSubmitAttendance}>
         Submit Attendance
+      </button>
+      <button className="go-back-button" onClick={handleGoBack}>
+        Go Back
       </button>
     </div>
   );

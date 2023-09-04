@@ -44,6 +44,10 @@ const UChooseCourse = () => {
     navigate("/");
   };
 
+  const handleGoBack = () => {
+    navigate(-1); // Go back to the previous page
+  };
+
   if (sessionToken && typeofuser === "student") {
     // navigate("/");
     return <Navigate to="/login/studentinfo" replace />;
@@ -67,6 +71,9 @@ const UChooseCourse = () => {
       </div>
       <button className="back-button" onClick={handleGoBackToHomePage}>
         Go Back To Home Page
+      </button>
+      <button className="go-back-button" onClick={handleGoBack}>
+        Go Back
       </button>
     </>
   );

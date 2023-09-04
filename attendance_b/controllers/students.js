@@ -61,7 +61,11 @@ const studentsLogin = async (req, res) => {
             console.log("Mail not present in db");
             res.status(404).json({ message: "Email not present in db" });
           } else {
-            if (!validateUser(password, result[0].password)) {
+            const checkpassword = await validateUser(
+              password,
+              result[0].password
+            );
+            if (!checkpassword) {
               console.log("Wrong Password!");
               res.status(401).json({ message: "Wrong Password!" });
             } else {

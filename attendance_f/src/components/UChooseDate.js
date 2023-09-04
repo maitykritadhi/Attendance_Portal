@@ -57,6 +57,10 @@ const UChooseDate = () => {
     }
   };
 
+  const handleGoBack = () => {
+    navigate(-1); // Go back to the previous page
+  };
+
   if (sessionToken && typeofuser === "student") {
     // navigate("/");
     return <Navigate to="/login/studentinfo" replace />;
@@ -80,6 +84,9 @@ const UChooseDate = () => {
       />
       <button className="submit-button" onClick={handleUpdateDate}>
         Submit Date
+      </button>
+      <button className="go-back-button" onClick={handleGoBack}>
+        Go Back
       </button>
     </div>
   );
