@@ -1,3 +1,4 @@
+/*
 const mysql = require("mysql");
 
 const pool = mysql.createPool({
@@ -8,6 +9,21 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   multipleStatements: true
+});
+
+module.exports = pool;
+*/
+
+const mysql = require("mysql");
+
+const pool = mysql.createPool({
+  host: "sql12.freesqldatabase.com",
+  user: "sql12644411",
+  password: "Qwerty*123",
+  database: "sql12644411",
+  waitForConnections: true,
+  connectionLimit: 10,
+  multipleStatements: true,
 });
 
 module.exports = pool;
