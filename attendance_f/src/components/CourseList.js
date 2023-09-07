@@ -5,7 +5,19 @@ import { Navigate } from "react-router-dom";
 
 import "./CourseList.css"; // Import the CSS file
 
+import { BASEURL_DEV, BASEURL_PROD, ENV } from "../config";
+
 const CourseList = () => {
+  const baseUrlDev = BASEURL_DEV;
+  const baseUrlProd = BASEURL_PROD;
+  let baseUrl;
+
+  if (ENV === "DEV") {
+    baseUrl = baseUrlDev;
+  } else {
+    baseUrl = baseUrlProd;
+  }
+
   const sessionToken = localStorage.getItem("token");
   const typeofuser = localStorage.getItem("userType");
   const [courses, setCourses] = useState([]);
@@ -14,14 +26,11 @@ const CourseList = () => {
   useEffect(() => {
     async function fetchCourseList() {
       try {
-        const response = await axios.get(
-          "http://localhost:3000/api/prof/getCourses",
-          {
-            headers: {
-              authorization: sessionToken,
-            },
-          }
-        );
+        const response = await axios.get(`${baseUrl}api/prof/getCourses`, {
+          headers: {
+            authorization: sessionToken,
+          },
+        });
 
         setCourses(response.data);
       } catch (error) {
@@ -30,7 +39,7 @@ const CourseList = () => {
     }
 
     fetchCourseList();
-  }, [sessionToken]);
+  }, [sessionToken, baseUrl]);
 
   const handleGoBackToHomePage = () => {
     navigate("/");
@@ -49,7 +58,10 @@ const CourseList = () => {
           <li key={course.id} className="course-list-item">
             Course ID: {course.id}, Course Name: {course.cname}
             {"   =>  "}
-            <Link to={`/courses/${course.id}`} className="course-link">
+            <Link
+              to={`/courses/${course.id}/${course.cname}`}
+              className="course-link"
+            >
               View Students
             </Link>
           </li>

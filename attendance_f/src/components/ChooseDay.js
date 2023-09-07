@@ -5,7 +5,19 @@ import { Navigate } from "react-router-dom";
 
 import "./ChooseDay.css"; // Import the CSS file
 
+import { BASEURL_DEV, BASEURL_PROD, ENV } from "../config";
+
 const ChooseDay = () => {
+  const baseUrlDev = BASEURL_DEV;
+  const baseUrlProd = BASEURL_PROD;
+  let baseUrl;
+
+  if (ENV === "DEV") {
+    baseUrl = baseUrlDev;
+  } else {
+    baseUrl = baseUrlProd;
+  }
+
   const navigate = useNavigate();
   const [availableDays, setAvailableDays] = useState([]);
   const [selectedDay, setSelectedDay] = useState("");
@@ -25,7 +37,7 @@ const ChooseDay = () => {
     async function fetchDays() {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/prof/chooseDate",
+          `${baseUrl}api/prof/chooseDate`,
           {
             headers: {
               authorization: sessionToken,
@@ -43,7 +55,7 @@ const ChooseDay = () => {
 
     // Call the fetchDays function
     fetchDays();
-  }, [navigate, sessionToken]);
+  }, [navigate, sessionToken, baseUrl]);
 
   const handleDayChange = (event) => {
     setSelectedDay(event.target.value);

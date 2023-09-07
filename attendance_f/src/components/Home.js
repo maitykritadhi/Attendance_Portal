@@ -6,7 +6,19 @@ import axios from "axios";
 
 import "./Home.css"; // Import the CSS file
 
+import { BASEURL_DEV, BASEURL_PROD, ENV } from "../config";
+
 const Home = () => {
+  const baseUrlDev = BASEURL_DEV;
+  const baseUrlProd = BASEURL_PROD;
+  let baseUrl;
+
+  if (ENV === "DEV") {
+    baseUrl = baseUrlDev;
+  } else {
+    baseUrl = baseUrlProd;
+  }
+
   const sessionToken = localStorage.getItem("token"); // Assuming you store the session token in local storage
   const typeofuser = localStorage.getItem("userType");
   const [userType, setUserType] = useState(); // Default user type
@@ -38,18 +50,17 @@ const Home = () => {
     if (userType === "1") {
       navigate("/courses"); // Navigate to the assigned courses page
     } else if (userType === "2") {
-
       const headers = {
         // Add your headers here
         authorization: sessionToken, // Example custom header
       };
-      
+
       // Call the API using Axios
       axios
-        .get("http://localhost:3000/api/prof/chooseDate", { headers })
+        .get(`${baseUrl}api/prof/chooseDate`, { headers })
         .then((response) => {
           console.log(response);
-          const selectedDay = response.data[0]['dayid']; // Assuming the API returns the selected day
+          const selectedDay = response.data[0]["dayid"]; // Assuming the API returns the selected day
           console.log(selectedDay);
 
           // Navigate to the '/chooseday/choosecourse' route with the selectedDay parameter
@@ -60,7 +71,6 @@ const Home = () => {
         });
 
       // navigate("/chooseday"); // Navigate to the mark attendance page
-
     } else if (userType === "3") {
       navigate("/uchoosedate");
     }
@@ -79,7 +89,7 @@ const Home = () => {
   if (sessionToken && typeofuser === "student") {
     return <Navigate to="/login/studentinfo" replace />;
   }
-    
+
   return (
     <>
       <div className="welcome-message">

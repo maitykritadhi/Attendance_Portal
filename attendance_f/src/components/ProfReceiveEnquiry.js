@@ -3,9 +3,21 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 
-import './ProfReceiveEnquiry.css'; // Import the CSS file
+import "./ProfReceiveEnquiry.css"; // Import the CSS file
+
+import { BASEURL_DEV, BASEURL_PROD, ENV } from "../config";
 
 const ProfReceiveEnquiry = () => {
+  const baseUrlDev = BASEURL_DEV;
+  const baseUrlProd = BASEURL_PROD;
+  let baseUrl;
+
+  if (ENV === "DEV") {
+    baseUrl = baseUrlDev;
+  } else {
+    baseUrl = baseUrlProd;
+  }
+
   const sessionToken = localStorage.getItem("token");
   const typeofuser = localStorage.getItem("userType");
   const [enquiries, setEnquiries] = useState([]);
@@ -15,7 +27,7 @@ const ProfReceiveEnquiry = () => {
     const fetchEnquiries = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/prof/getprofRequestReceive",
+          `${baseUrl}api/prof/getprofRequestReceive`,
           {
             headers: {
               authorization: sessionToken,
@@ -29,7 +41,7 @@ const ProfReceiveEnquiry = () => {
     };
 
     fetchEnquiries();
-  }, [sessionToken]);
+  }, [sessionToken, baseUrl]);
 
   const [profMssgInputs, setProfMssgInputs] = useState({}); // State for the professor's message inputs
 
@@ -42,7 +54,7 @@ const ProfReceiveEnquiry = () => {
       }
 
       await axios.put(
-        "http://localhost:3000/api/prof/profRequestUpdate",
+        `${baseUrl}api/prof/profRequestUpdate`,
         {
           id: id,
           prof_mssg: prof_mssg,
@@ -162,8 +174,3 @@ const ProfReceiveEnquiry = () => {
 };
 
 export default ProfReceiveEnquiry;
-
-
-
-
-

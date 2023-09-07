@@ -3,9 +3,20 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 
-import "./UViewStudents.css"
+import "./UViewStudents.css";
+import { BASEURL_DEV, BASEURL_PROD, ENV } from "../config";
 
 const UViewStudents = () => {
+  const baseUrlDev = BASEURL_DEV;
+  const baseUrlProd = BASEURL_PROD;
+  let baseUrl;
+
+  if (ENV === "DEV") {
+    baseUrl = baseUrlDev;
+  } else {
+    baseUrl = baseUrlProd;
+  }
+
   const sessionToken = localStorage.getItem("token"); // Replace with your token retrieval logic
   const typeofuser = localStorage.getItem("userType");
   const { courseId } = useParams();
@@ -22,12 +33,12 @@ const UViewStudents = () => {
     async function fetchStudentList() {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/prof/getStudentListUpdation`,
+          `${baseUrl}api/prof/getStudentListUpdation`,
           {
             headers: {
               authorization: sessionToken,
               cid: courseId,
-              sdate: formattedDate
+              sdate: formattedDate,
             },
           }
         );
@@ -39,7 +50,7 @@ const UViewStudents = () => {
     }
 
     fetchStudentList();
-  }, [courseId, sessionToken, formattedDate]);
+  }, [courseId, sessionToken, formattedDate, baseUrl]);
 
   const handleCheckboxChange = (studentId) => {
     const updatedStudents = students.map((student) => {
@@ -70,7 +81,7 @@ const UViewStudents = () => {
   const handleSubmit = async () => {
     try {
       const response = await axios.put(
-        "http://localhost:3000/api/prof/updatesAttendance",
+        `${baseUrl}api/prof/updatesAttendance`,
         updatedAttendance,
         {
           headers: {

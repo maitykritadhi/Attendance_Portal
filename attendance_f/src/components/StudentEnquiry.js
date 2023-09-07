@@ -5,7 +5,20 @@ import { useNavigate } from "react-router-dom";
 
 import "./StudentEnquiry.css"; // Import the CSS file
 
+import { BASEURL_DEV, BASEURL_PROD, ENV } from "../config";
+
+
 const StudentEnquiry = () => {
+  const baseUrlDev = BASEURL_DEV;
+  const baseUrlProd = BASEURL_PROD;
+  let baseUrl;
+
+  if (ENV === "DEV") {
+    baseUrl = baseUrlDev;
+  } else {
+    baseUrl = baseUrlProd;
+  }
+
   const location = useLocation();
   const navigate = useNavigate();
   const sessionToken = localStorage.getItem("token");
@@ -28,7 +41,7 @@ const StudentEnquiry = () => {
       alert("Please enter both message and select a course.");
       return; // Exit the function early
     }
-    
+
     try {
       //   const requestBody = {
       //     mssg: message,
@@ -36,7 +49,7 @@ const StudentEnquiry = () => {
       //   };
 
       const response = await axios.post(
-        "http://localhost:3000/api/students/studentRequest",
+        `${baseUrl}api/students/studentRequest`,
         {
           mssg: message,
           id: selectedCourse,
@@ -61,11 +74,11 @@ const StudentEnquiry = () => {
     }
   };
 
-  const handleBackToStudentInfo = ()=>{
+  const handleBackToStudentInfo = () => {
     navigate("/login/studentinfo");
   };
 
-  const handleCheckEnquiryResult = ()=>{
+  const handleCheckEnquiryResult = () => {
     navigate("/login/studentinfo/studentenquiryresult");
   };
 

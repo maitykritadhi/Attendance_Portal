@@ -3,8 +3,19 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import "./SignUp.css"; // Import the CSS file
+import { BASEURL_DEV, BASEURL_PROD, ENV } from "../config";
 
 const SignUp = () => {
+  const baseUrlDev = BASEURL_DEV;
+  const baseUrlProd = BASEURL_PROD;
+  let baseUrl;
+
+  if (ENV === "DEV") {
+    baseUrl = baseUrlDev;
+  } else {
+    baseUrl = baseUrlProd;
+  }
+
   const [userType, setUserType] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -22,9 +33,9 @@ const SignUp = () => {
     let str = "";
     event.preventDefault();
     if (userType === "professor") {
-      str = "http://localhost:3000/api/prof/signup";
+      str = `${baseUrl}api/prof/signup`;
     } else {
-      str = "http://localhost:3000/api/students/signup";
+      str = `${baseUrl}api/students/signup`;
     }
     const response = await axios.post(str, {
       name: name,

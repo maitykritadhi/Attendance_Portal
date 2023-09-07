@@ -109,18 +109,18 @@ const getStudentInfo = async (req, res) => {
   try {
     const sid = req.userId;
     const flagofuser = Number(req.flag);
-    // console.log(sid);
+    console.log(sid);
     let result;
     await pool.query(
-      "SELECT name,roll,mail FROM attenendance.students WHERE id= ? ",
+      "SELECT name,roll,mail FROM students WHERE id= ? ",
       [sid],
       async (error1, result1) => {
-        // console.log(result1);
+        console.log(result1);
         if (error1) {
           res.send({ message: "database error 1" });
-        } else if (!result1[0]) {
+        } else if (result1.size === 0) {
           console.log("Data not present in db");
-          res.status(404).json({ message: "Data not present in db" });
+          res.status(404).json({ message: "Data not present in db " });
         } else if (flagofuser === 1) {
           // console.log(flagofuser);
           console.log("Bad Request due to wrong user");
@@ -130,20 +130,24 @@ const getStudentInfo = async (req, res) => {
           // console.log(result);
           // res.send(result);
           await pool.query(
-            "SELECT course_id,DATE_FORMAT(date, '%Y-%m-%d') AS date,attendance FROM attenendance.mark_attendance WHERE stud_id = ?",
+            "SELECT course_id,DATE_FORMAT(date, '%Y-%m-%d') AS date,attendance FROM mark_attendance WHERE stud_id = ?",
             [sid],
             async (error2, result2) => {
               if (error2) {
                 res.send({ message: "database error 2" });
-              } else if (!result2[0]) {
-                console.log("Data not present in db");
-                res.status(404).json({ message: "Data not present in db" });
-              } else {
-                result["attendance"] = result2;
+              }
+              // } else if (!result2[0]) {
+              //   result["attendance"] = [];
+              //   console.log("No attendance found");
+              //   // res.status(404).json({ message: "Data not present in db 1" });
+              // }
+              else {
+                if (result2[0]) result["attendance"] = result2;
+                else result["attendance"] = [];
                 // console.log(result);
                 // res.send(result);
                 await pool.query(
-                  "SELECT c.cid,c.id FROM attenendance.courses c JOIN attenendance.student_course_mapped scm ON c.id = scm.course_id WHERE scm.stud_id = ?",
+                  "SELECT c.cid,c.id FROM courses c JOIN student_course_mapped scm ON c.id = scm.course_id WHERE scm.stud_id = ?",
                   [sid],
                   async (error3, result3) => {
                     if (error3) {
@@ -156,7 +160,7 @@ const getStudentInfo = async (req, res) => {
                     } else {
                       result["courses"] = result3;
                       await pool.query(
-                        "SELECT dayid,cid FROM attenendance.timetable WHERE cid IN (SELECT course_id FROM attenendance.student_course_mapped WHERE stud_id = ?)",
+                        "SELECT dayid,cid FROM timetable WHERE cid IN (SELECT course_id FROM student_course_mapped WHERE stud_id = ?)",
                         [sid],
                         async (error4, result4) => {
                           if (error4) {
@@ -218,8 +222,8 @@ const getStudentInfo = async (req, res) => {
   }
 };
 
-const studentRequest = async(req,res) => {
-  try{
+const studentRequest = async (req, res) => {
+  try {
     const sid = req.userId;
     let stud_mssg = req.body.mssg;
     const flagofuser = Number(req.flag);
@@ -231,53 +235,54 @@ const studentRequest = async(req,res) => {
       console.log("Missing parameters");
       res.status(404).json({ message: "Missing Parameters!!!" });
     } else {
-      await pool.query("SELECT id,prof_id FROM courses WHERE id = ?",
-      [id],
-      async(error,result1) => {
-        if (error) {
-          console.log(error);
-          res.send({ message: "database error" });
-        } else if (flagofuser === 1) {
-          // console.log(flagofuser);
-          console.log("Bad Request due to wrong user");
-          res.status(400).json({ error: "Bad Request due to wrong user" });
-        } else {
-          let course_id = result1[0]["id"];
-          let prof_id = result1[0]["prof_id"];
-          // console.log(result1);
-          // res.send(result1);
-          await pool.query(
-            "INSERT INTO request (stud_mssg,stud_id,prof_id,state,course_id) VALUES (?,?,?,?,?)",
-            [stud_mssg, sid, prof_id, state, course_id],
-            async (error, result) => {
-              if (error) {
-                console.log(error);
-                res.send({ message: "database error" });
-              } else {
-                console.log("Successfully send request to prof!!");
-                res.send({ message: "Successfully send request to prof!!" });
+      await pool.query(
+        "SELECT id,prof_id FROM courses WHERE id = ?",
+        [id],
+        async (error, result1) => {
+          if (error) {
+            console.log(error);
+            res.send({ message: "database error" });
+          } else if (flagofuser === 1) {
+            // console.log(flagofuser);
+            console.log("Bad Request due to wrong user");
+            res.status(400).json({ error: "Bad Request due to wrong user" });
+          } else {
+            let course_id = result1[0]["id"];
+            let prof_id = result1[0]["prof_id"];
+            // console.log(result1);
+            // res.send(result1);
+            await pool.query(
+              "INSERT INTO request (stud_mssg,stud_id,prof_id,state,course_id) VALUES (?,?,?,?,?)",
+              [stud_mssg, sid, prof_id, state, course_id],
+              async (error, result) => {
+                if (error) {
+                  console.log(error);
+                  res.send({ message: "database error" });
+                } else {
+                  console.log("Successfully send request to prof!!");
+                  res.send({ message: "Successfully send request to prof!!" });
+                }
               }
-            }
-          );
+            );
+          }
         }
-      }
-    );
+      );
     }
-  }catch(error){
+  } catch (error) {
     // Handle any errors that occurred during the database operations
     console.error("Error during studentRequest:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-const studentgetResponse = async(req,res) =>{
-  try{
+const studentgetResponse = async (req, res) => {
+  try {
     const sid = req.userId;
     const flagofuser = Number(req.flag);
     await pool.query(
       "SELECT id,stud_mssg,prof_mssg,stud_id,state,course_id FROM request WHERE stud_id = ?",
       [sid],
-      async(error,result)=>{
+      async (error, result) => {
         if (error) {
           console.log(error);
           res.send({ message: "database error" });
@@ -291,7 +296,7 @@ const studentgetResponse = async(req,res) =>{
         }
       }
     );
-  }catch{
+  } catch {
     // Handle any errors that occurred during the database operations
     console.error("Error during studentRequest:", error);
     res.status(500).json({ error: "Internal Server Error" });

@@ -5,9 +5,20 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 
-import "./UChooseDate.css"
+import "./UChooseDate.css";
+import { BASEURL_DEV, BASEURL_PROD, ENV } from "../config";
 
 const UChooseDate = () => {
+  const baseUrlDev = BASEURL_DEV;
+  const baseUrlProd = BASEURL_PROD;
+  let baseUrl;
+
+  if (ENV === "DEV") {
+    baseUrl = baseUrlDev;
+  } else {
+    baseUrl = baseUrlProd;
+  }
+
   const [selectedDate, setSelectedDate] = useState(new Date());
   const sessionToken = localStorage.getItem("token");
   const typeofuser = localStorage.getItem("userType");
@@ -29,9 +40,9 @@ const UChooseDate = () => {
 
       // Store formattedDate in local storage
       localStorage.setItem("formattedDate", formattedDate);
-      
+
       const response = await axios.get(
-        "http://localhost:3000/api/prof/getChosenDateUpdation",
+        `${baseUrl}api/prof/getChosenDateUpdation`,
         {
           headers: {
             authorization: sessionToken,

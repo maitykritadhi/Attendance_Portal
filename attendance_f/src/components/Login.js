@@ -3,7 +3,23 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./Login.css"; // Import the CSS file
 
+import {
+  BASEURL_DEV,
+  BASEURL_PROD,
+  ENV,
+} from "../config";
+
 const Login = (props) => {
+  const baseUrlDev = BASEURL_DEV;
+  const baseUrlProd = BASEURL_PROD;
+  let baseUrl;
+
+  if (ENV === "DEV") {
+    baseUrl = baseUrlDev;
+  } else {
+    baseUrl = baseUrlProd;
+  }
+
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [userType, setUserType] = useState();
 
@@ -21,10 +37,10 @@ const Login = (props) => {
     let str = "";
 
     if (userType === "professor") {
-      str = "http://localhost:3000/api/prof/login";
+      str = `${baseUrl}/api/prof/login`;
       redirectpath = "/";
     } else {
-      str = "http://localhost:3000/api/students/login";
+      str = `${baseUrl}api/students/login`;
       redirectpath = "/login/studentinfo";
     }
 
@@ -51,7 +67,6 @@ const Login = (props) => {
       }
     }
   };
-
 
   /*
   const handleSubmit = async (e) => {
@@ -183,4 +198,3 @@ const Login = (props) => {
 };
 
 export default Login;
-

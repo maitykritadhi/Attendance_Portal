@@ -3,7 +3,20 @@ import axios from "axios";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 
+import { BASEURL_DEV, BASEURL_PROD, ENV } from "../config";
+
+
 const ChooseCourse = () => {
+  const baseUrlDev = BASEURL_DEV;
+  const baseUrlProd = BASEURL_PROD;
+  let baseUrl;
+
+  if (ENV === "DEV") {
+    baseUrl = baseUrlDev;
+  } else {
+    baseUrl = baseUrlProd;
+  }
+
   const location = useLocation();
   const navigate = useNavigate();
   const sessionToken = localStorage.getItem("token");
@@ -15,7 +28,7 @@ const ChooseCourse = () => {
     async function fetchCourseList() {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/prof/chooseCourse",
+          `${baseUrl}api/prof/chooseCourse`,
           {
             headers: {
               authorization: sessionToken,
@@ -33,7 +46,7 @@ const ChooseCourse = () => {
     if (selectedDayId) {
       fetchCourseList();
     }
-  }, [sessionToken, selectedDayId]); // Include selectedDayId in the dependency array
+  }, [sessionToken, selectedDayId, baseUrl]); // Include selectedDayId in the dependency array
 
   const handleGoBackToHomePage = () => {
     navigate("/");
@@ -43,7 +56,6 @@ const ChooseCourse = () => {
     // navigate("/");
     return <Navigate to="/login/studentinfo" replace />;
   }
-  
 
   return (
     <>

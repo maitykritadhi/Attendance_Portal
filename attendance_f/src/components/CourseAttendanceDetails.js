@@ -1,24 +1,3 @@
-/*
-import React from "react";
-import { useLocation } from "react-router-dom";
-
-const CourseAttendanceDetails = () => {
-  const location = useLocation();
-  console.log(location.state);
-  const { ncourse, studentData } = location.state;
-//   const { name, roll, mail, attendance, courses } = studentData;
-  const courseId = parseInt(location.pathname.split("/").pop(), 10); // Extract courseId from URL
-  console.log(courseId);
-
-
-  return (
-    <>HI</>
-  );
-};
-
-export default CourseAttendanceDetails;
-*/
-
 // CourseAttendanceDetails.js
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -26,8 +5,8 @@ import { Navigate } from "react-router-dom";
 
 import "./CourseAttendanceDetails.css"; // Import the CSS file
 
-
 const CourseAttendanceDetails = () => {
+  
   const typeofuser = localStorage.getItem("userType");
   const sessionToken = localStorage.getItem("token"); // Fetch the session token
   const location = useLocation();

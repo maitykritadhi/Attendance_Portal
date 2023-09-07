@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 
 import "./StudentDashboard.css";
 
+import { BASEURL_DEV, BASEURL_PROD, ENV } from "../config";
+
 const daysOfWeek = [
   "Sunday",
   "Monday",
@@ -17,6 +19,16 @@ const daysOfWeek = [
 ];
 
 const StudentDashboard = () => {
+  const baseUrlDev = BASEURL_DEV;
+  const baseUrlProd = BASEURL_PROD;
+  let baseUrl;
+
+  if (ENV === "DEV") {
+    baseUrl = baseUrlDev;
+  } else {
+    baseUrl = baseUrlProd;
+  }
+
   const [studentData, setStudentData] = useState(null);
   const sessionToken = localStorage.getItem("token");
   const typeofuser = localStorage.getItem("userType");
@@ -26,7 +38,7 @@ const StudentDashboard = () => {
     const fetchStudentInfo = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/students/getStudentInfo",
+          `${baseUrl}api/students/getStudentInfo`,
           {
             headers: {
               authorization: sessionToken,
@@ -41,7 +53,7 @@ const StudentDashboard = () => {
     };
 
     fetchStudentInfo();
-  }, [sessionToken]);
+  }, [sessionToken, baseUrl]);
 
   if (sessionToken && typeofuser === "professor") {
     // navigate("/");
@@ -56,7 +68,7 @@ const StudentDashboard = () => {
     localStorage.clear();
     navigate("/login"); // Adjust the route as needed
   };
-  
+
   return (
     <div className="student-dashboard">
       {studentData && (
@@ -134,7 +146,7 @@ const StudentDashboard = () => {
         >
           Student Enquiry
         </button>
-        <button id="logout-btn"  onClick={handleLogout}>
+        <button id="logout-btn" onClick={handleLogout}>
           Logout
         </button>
       </div>

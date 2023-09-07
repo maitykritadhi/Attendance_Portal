@@ -139,7 +139,7 @@ const profGetStudents = async (req, res) => {
     const courseId = req.headers.course_id;
     const flagofuser = Number(req.flag);
     await pool.query(
-      "SELECT students.id, students.name, students.roll FROM attenendance.students WHERE students.id NOT IN (SELECT student_course_mapped.stud_id FROM attenendance.student_course_mapped WHERE student_course_mapped.course_id = ?)",
+      "SELECT students.id, students.name, students.roll FROM students WHERE students.id NOT IN (SELECT student_course_mapped.stud_id FROM student_course_mapped WHERE student_course_mapped.course_id = ?)",
       [courseId],
       async (error, result) => {
         if (error) {
@@ -279,7 +279,7 @@ const profChooseCourse = async (req, res) => {
     const userId = req.userId;
     const flagofuser = Number(req.flag);
     await pool.query(
-      "SELECT id,cid,cname FROM attenendance.courses WHERE prof_id = ? AND id IN (SELECT cid FROM attenendance.timetable WHERE dayid = ?)",
+      "SELECT id,cid,cname FROM courses WHERE prof_id = ? AND id IN (SELECT cid FROM timetable WHERE dayid = ?)",
       [userId, dayid],
       async (error, result) => {
         if (error) {
@@ -514,7 +514,7 @@ const profRequestReceive = async(req,res) => {
     const flagofuser = Number(req.flag);
 
     await pool.query(
-      "SELECT r.id,r.stud_mssg,r.stud_id,s.name,s.roll,s.mail,r.prof_id,r.state,(SELECT cid FROM attenendance.courses WHERE id = r.course_id) as cname FROM attenendance.request r JOIN attenendance.students s ON r.stud_id = s.id WHERE r.prof_id = ? AND r.state = 0;",
+      "SELECT r.id,r.stud_mssg,r.stud_id,s.name,s.roll,s.mail,r.prof_id,r.state,(SELECT cid FROM courses WHERE id = r.course_id) as cname FROM request r JOIN students s ON r.stud_id = s.id WHERE r.prof_id = ? AND r.state = 0;",
       [sid],
       async (error, result) => {
         if (error) {

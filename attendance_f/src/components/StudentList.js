@@ -4,9 +4,20 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 
 import "./StudentList.css"; // Import the CSS file
+import { BASEURL_DEV, BASEURL_PROD, ENV } from "../config";
 
 const StudentList = () => {
-  const { courseId } = useParams();
+  const baseUrlDev = BASEURL_DEV;
+  const baseUrlProd = BASEURL_PROD;
+  let baseUrl;
+
+  if (ENV === "DEV") {
+    baseUrl = baseUrlDev;
+  } else {
+    baseUrl = baseUrlProd;
+  }
+
+  const { courseId, courseName } = useParams();
   const [students, setStudents] = useState([]);
   const [selectedStudents, setSelectedStudents] = useState([]);
   const sessionToken = localStorage.getItem("token");
@@ -17,15 +28,12 @@ const StudentList = () => {
     async function fetchStudents() {
       try {
         console.log(courseId);
-        const response = await axios.get(
-          `http://localhost:3000/api/prof/getStudents`,
-          {
-            headers: {
-              authorization: sessionToken,
-              course_id: courseId,
-            },
-          }
-        ); // Replace with your backend API endpoint
+        const response = await axios.get(`${baseUrl}api/prof/getStudents`, {
+          headers: {
+            authorization: sessionToken,
+            course_id: courseId,
+          },
+        }); // Replace with your backend API endpoint
         setStudents(response.data);
       } catch (error) {
         console.error("Error fetching student list:", error);
@@ -33,7 +41,7 @@ const StudentList = () => {
     }
 
     fetchStudents();
-  }, [courseId,sessionToken]);
+  }, [courseId, sessionToken, baseUrl]);
 
   const handleCheckboxChange = (studentId) => {
     if (selectedStudents.includes(studentId)) {
@@ -47,7 +55,7 @@ const StudentList = () => {
   const handleSubmit = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/prof/assignStudents",
+        `${baseUrl}api/prof/assignStudents`,
         {
           cid: courseId,
           sid: selectedStudents,
@@ -63,15 +71,14 @@ const StudentList = () => {
     } catch (error) {
       console.error("Error enrolling students:", error);
     }
-    
   };
 
   const handleGoBackToHomePage = () => {
-    navigate('/');
+    navigate("/");
   };
 
   const handleGoBack = () => {
-    navigate('/courses');
+    navigate("/courses");
   };
 
   if (sessionToken && typeofuser === "student") {
@@ -81,7 +88,7 @@ const StudentList = () => {
 
   return (
     <div className="student-list-container">
-      <h2>Students Not Enrolled in Course ID : {courseId}</h2>
+      <h2>Students Not Enrolled in Course ID : {courseName}</h2>
       <div className="student-list">
         <ul>
           {students.map((student) => (

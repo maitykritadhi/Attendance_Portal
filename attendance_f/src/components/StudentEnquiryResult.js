@@ -4,24 +4,33 @@ import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 import "./StudentEnquiryResult.css"; // Import the CSS file
+import { BASEURL_DEV, BASEURL_PROD, ENV } from "../config";
 
 const StudentEnquiryResult = () => {
+  const baseUrlDev = BASEURL_DEV;
+  const baseUrlProd = BASEURL_PROD;
+  let baseUrl;
+
+  if (ENV === "DEV") {
+    baseUrl = baseUrlDev;
+  } else {
+    baseUrl = baseUrlProd;
+  }
+
   const sessionToken = localStorage.getItem("token");
   const typeofuser = localStorage.getItem("userType");
   const navigate = useNavigate();
   const [enquiryResults, setEnquiryResults] = useState([]);
 
-  
-
   useEffect(() => {
     if (sessionToken && typeofuser === "professor") {
       // navigate("/");
       return <Navigate to="/" replace />;
-    }else{
+    } else {
       const fetchEnquiryResults = async () => {
         try {
           const response = await axios.get(
-            "http://localhost:3000/api/students/studentgetResponse",
+            `${baseUrl}api/students/studentgetResponse`,
             {
               headers: {
                 authorization: sessionToken,
@@ -35,10 +44,8 @@ const StudentEnquiryResult = () => {
       };
 
       fetchEnquiryResults();
-
     }
-    
-  }, [sessionToken, typeofuser]);
+  }, [sessionToken, typeofuser, baseUrl]);
 
   const handleBackToStudentDashboard = () => {
     navigate("/login/studentinfo");

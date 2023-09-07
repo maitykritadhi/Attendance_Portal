@@ -3,10 +3,20 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 
-
 import "./UChooseCourse.css"; // Import the CSS file
+import { BASEURL_DEV, BASEURL_PROD, ENV } from "../config";
 
 const UChooseCourse = () => {
+  const baseUrlDev = BASEURL_DEV;
+  const baseUrlProd = BASEURL_PROD;
+  let baseUrl;
+
+  if (ENV === "DEV") {
+    baseUrl = baseUrlDev;
+  } else {
+    baseUrl = baseUrlProd;
+  }
+
   const navigate = useNavigate();
   const sessionToken = localStorage.getItem("token");
   const typeofuser = localStorage.getItem("userType");
@@ -18,15 +28,12 @@ const UChooseCourse = () => {
     async function fetchCourseList() {
       try {
         console.log("Fetching courses for dayid:", selectedDayId);
-        const response = await axios.get(
-          "http://localhost:3000/api/prof/chooseCourse",
-          {
-            headers: {
-              authorization: sessionToken,
-              dayid: selectedDayId,
-            },
-          }
-        );
+        const response = await axios.get(`${baseUrl}api/prof/chooseCourse`, {
+          headers: {
+            authorization: sessionToken,
+            dayid: selectedDayId,
+          },
+        });
 
         console.log("Courses response:", response.data);
         setCourses(response.data);
@@ -38,7 +45,7 @@ const UChooseCourse = () => {
     if (selectedDayId) {
       fetchCourseList();
     }
-  }, [sessionToken, selectedDayId]); // Include selectedDayId in the dependency array
+  }, [sessionToken, selectedDayId, baseUrl]); // Include selectedDayId in the dependency array
 
   const handleGoBackToHomePage = () => {
     navigate("/");
@@ -52,7 +59,7 @@ const UChooseCourse = () => {
     // navigate("/");
     return <Navigate to="/login/studentinfo" replace />;
   }
-  
+
   return (
     <>
       <div className="course-list-container">
