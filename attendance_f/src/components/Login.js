@@ -37,7 +37,7 @@ const Login = (props) => {
     let str = "";
 
     if (userType === "professor") {
-      str = `${baseUrl}/api/prof/login`;
+      str = `${baseUrl}api/prof/login`;
       redirectpath = "/";
     } else {
       str = `${baseUrl}api/students/login`;
