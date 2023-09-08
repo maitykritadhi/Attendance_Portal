@@ -37,6 +37,7 @@ const DisplayStudents = () => {
 
         setStudents(response.data);
       } catch (error) {
+        // alert("Already marked attendance");
         console.error("Error fetching student list:", error);
       }
     }
@@ -109,6 +110,7 @@ const DisplayStudents = () => {
       navigate("/");
       // You can perform further actions here, such as updating the UI or reloading data
     } catch (error) {
+      alert("Already marked attendance. Please go to Update attendance!!!!");
       console.error("Error marking attendance:", error);
     }
   };
