@@ -30,6 +30,7 @@ const StudentDashboard = () => {
   }
 
   const [studentData, setStudentData] = useState(null);
+  const [rows, setRows] = useState(null);
   const sessionToken = localStorage.getItem("token");
   const typeofuser = localStorage.getItem("userType");
   const navigate = useNavigate();
@@ -45,14 +46,51 @@ const StudentDashboard = () => {
             },
           }
         );
-
+        console.log(response.data);
         setStudentData(response.data);
+        
+        // Calculate the maximum number of courses on any day
+        const maxCoursesPerDay = Math.max(
+          ...daysOfWeek.map(
+            (_, colIndex) =>
+              response.data.timetable.filter(
+                (entry) => entry.dayid === colIndex
+              ).length
+          )
+        );
+
+        const extra = Array.from({ length: maxCoursesPerDay }).map(
+          (_, rowIndex) => (
+            <tr key={rowIndex}>
+              {daysOfWeek.map((_, colIndex) => (
+                <td key={colIndex}>
+                  {
+                    response.data.timetable
+                      .filter((entry) => entry.dayid === colIndex)
+                      .map((entry, courseIndex) => {
+                        const course = response.data.courses.find(
+                          (c) => c.id === entry.cid
+                        );
+                        return course ? (
+                          <span className="course-cell" key={course.id}>
+                            {course.cid}
+                          </span>
+                        ) : null;
+                      })[rowIndex]
+                  }
+                </td>
+              ))}
+            </tr>
+          )
+        );
+        setRows(extra);
       } catch (error) {
         console.error("Error fetching student information:", error);
       }
     };
 
     fetchStudentInfo();
+    
   }, [sessionToken, baseUrl]);
 
   if (sessionToken && typeofuser === "professor") {
@@ -67,7 +105,11 @@ const StudentDashboard = () => {
     localStorage.removeItem("userType");
     localStorage.clear();
     navigate("/login"); // Adjust the route as needed
-  };
+  }
+
+  //////////////////////////////
+
+  //  ////////////////////////
 
   return (
     <div className="student-dashboard">
@@ -80,7 +122,7 @@ const StudentDashboard = () => {
             <h3>Email: {studentData.mail}</h3>
           </div>
 
-          <div className="timetable">
+          {/* <div className="timetable">
             <h2>Timetable</h2>
             <table className="timetable-table">
               <thead>
@@ -111,6 +153,59 @@ const StudentDashboard = () => {
                   </tr>
                 ))}
               </tbody>
+            </table>
+          </div> */}
+
+          {/* <div className="timetable">
+            <h2>Timetable</h2>
+            <table className="timetable-table">
+              <thead>
+                <tr>
+                  {daysOfWeek.map((day, dayId) => (
+                    <th key={dayId}>{day}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from({
+                  length:
+                    Math.max(
+                      ...studentData.timetable.map((entry) => entry.dayid)
+                    ) + 1,
+                }).map((_, rowIndex) => (
+                  <tr key={rowIndex}>
+                    {daysOfWeek.map((_, colIndex) => (
+                      <td key={colIndex}>
+                        {studentData.timetable
+                          .filter((entry) => entry.dayid === colIndex)
+                          .map((entry) =>
+                            studentData.courses
+                              .filter((course) => course.id === entry.cid)
+                              .map((course) => (
+                                <span className="course-cell" key={course.id}>
+                                  {course.cid}
+                                </span>
+                              ))
+                          )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div> */}
+
+          <div className="timetable">
+            <h2>Timetable</h2>
+            <table className="timetable-table">
+              <thead>
+                <tr>
+                  {daysOfWeek.map((day, dayId) => (
+                    <th key={dayId}>{day}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>{rows}</tbody>
             </table>
           </div>
 
