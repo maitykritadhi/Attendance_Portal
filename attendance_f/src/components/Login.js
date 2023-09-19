@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Loader from "./Loader"; // Import the Loader component
 import "./Login.css"; // Import the CSS file
 
 import {
@@ -19,7 +20,9 @@ const Login = (props) => {
   } else {
     baseUrl = baseUrlProd;
   }
+  console.log(baseUrl);
 
+  const [isSubmitting, setIsSubmitting] = useState(false); // State to track form submission
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [userType, setUserType] = useState();
 
@@ -45,6 +48,7 @@ const Login = (props) => {
     }
 
     try {
+      setIsSubmitting(true); // Start submitting, show the loader
       const response = await axios.post(str, {
         mail: credentials.email,
         password: credentials.password,
@@ -65,6 +69,8 @@ const Login = (props) => {
       } else {
         alert("An error occurred while processing your request."); // Generic error message
       }
+    } finally {
+      setIsSubmitting(false); // Stop submitting, hide the loader
     }
   };
 
@@ -177,13 +183,19 @@ const Login = (props) => {
           </div>
         </div>
 
-        <button
-          type="submit"
-          className="btn btn-primary"
-          onClick={handleSubmit}
-        >
-          Submit
-        </button>
+        {/* Conditional rendering for the submit button */}
+        {isSubmitting ? (
+          <Loader /> // Show the loader while submitting
+        ) : (
+          <button
+            type="submit"
+            className="btn btn-primary"
+            onClick={handleSubmit}
+            disabled={isSubmitting} // Disable the button while submitting
+          >
+            Submit
+          </button>
+        )}
 
         <button
           type="button"
