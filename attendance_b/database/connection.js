@@ -1,4 +1,4 @@
-// local database
+
 const mysql = require("mysql");
 
 const pool = mysql.createPool({
@@ -30,7 +30,6 @@ const pool = mysql.createPool({
 module.exports = pool;
 */
 /*
-// for already hosted connection 
 const mysql = require("mysql");
 
 const pool = mysql.createPool({
