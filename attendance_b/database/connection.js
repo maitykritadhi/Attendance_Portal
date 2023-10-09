@@ -1,4 +1,3 @@
-
 const mysql = require("mysql");
 
 const pool = mysql.createPool({
@@ -8,11 +7,10 @@ const pool = mysql.createPool({
   database: "attenendance",
   waitForConnections: true,
   connectionLimit: 10,
-  multipleStatements: true
+  multipleStatements: true,
 });
 
 module.exports = pool;
-
 
 /*
 const mysql = require("mysql");
