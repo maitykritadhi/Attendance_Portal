@@ -10,4 +10,4 @@ In frontend, config.js change ENV to 'DEV' from 'PROD'.
 - Open frontend seperately and type in terminal: ``` npm start ```
 
 
-Notes Doc : [Gdoc of Attendance Portal ](https://docs.google.com/document/d/1JDHhlHO3uCGji766vfNAmzvM5_u7bG_1D5KlxJClMuY/edit)
+Youtube Link : [Click Here ](https://www.youtube.com/watch?v=S_P_fyYYrJI)
