@@ -1,6 +1,8 @@
 # Attendance_Portal
 To view the hosted version Click here : https://attendance-portal-frontend-kzx9.onrender.com
 
+###### Youtube Link : [Click Here ](https://www.youtube.com/watch?v=S_P_fyYYrJI)
+
 ## Instructions 
 In backend, database/connection.js change the connection database as required for local setup.
 In frontend, config.js change ENV to 'DEV' from 'PROD'.
@@ -9,8 +11,6 @@ In frontend, config.js change ENV to 'DEV' from 'PROD'.
 - Open backend seperately and type in terminal : ``` npm start ```
 - Open frontend seperately and type in terminal: ``` npm start ```
 
-
-Youtube Link : [Click Here ](https://www.youtube.com/watch?v=S_P_fyYYrJI)
 
 ## Short description
 - The attendance portal website was created to make a dynamic attendance maintenance. <br>
